@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paper Flip Book</title>
+</head>
+<body>
+
+<div class="paper-stage">
+  <div class="dancer">
+    <!-- Replace these with your own photo URLs -->
+    <img src="https://i.postimg.cc/VL8Qnc42/Screenshot-2025-09-24-at-7-34-26-PM.png" frame1" />
+    <img src="https://i.postimg.cc/Pxw9v6Dt/Screenshot-2025-09-24-at-7-34-38-PM.png" alt="frame2" />
+    <img src="https://i.postimg.cc/GpBS6Mqk/Screenshot-2025-09-24-at-7-44-49-PM.png" alt="frame3" />
+    <img src="https://i.postimg.cc/Pxw9v6Dt/Screenshot-2025-09-24-at-7-34-38-PM.png" alt="frame4" />
+  </div>
+</div>
+
+<style>
+body {
+  margin: 0;
+  background: #f8f4e3; /* paper-like beige */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: 'Courier New', monospace;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-shadow: 2px 2px 0px #aaa;
+  color: #222;
+  text-align: center; /* forces the title text to be centered */
+  width: 100%; /* takes full width of container */
+}
+
+.paper-stage {
+  width: 400px;
+  height: 400px;
+  background: #fffef9;
+  border: 4px solid #000;
+  box-shadow: 10px 10px 0px #444;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.dancer img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-1deg); /* centers & rotates */
+  width: 200px;
+  height: auto;
+  object-fit: contain;
+  display: none;
+  filter: contrast(1.1) brightness(1.05);
+  border: 2px solid #222;
+  box-shadow: 3px 3px 0px #000;
+}
+</style>
+
+<script>
+const frames = document.querySelectorAll(".dancer img");
+let current = 0;
+
+function showFrame() {
+  frames.forEach((f, i) => (f.style.display = i === current ? "block" : "none"));
+  current = (current + 1) % frames.length;
+}
+
+// Change frame every 500ms (jerky stop-motion feel)
+setInterval(showFrame, 250);
+
+// Start
+showFrame();
+</script>
+
+</body>
+</html>
