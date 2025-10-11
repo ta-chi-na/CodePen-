@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Art Show</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Georgia', serif;
+      background: #fdfdfd;
+      color: #333;
+    }
+
+    /* Navbar */
+    .navbar {
+      position: sticky;
+      top: 0;
+      background: #222;
+      padding: 15px;
+      text-align: center;
+      z-index: 1000;
+    }
+
+    .navbar a {
+      color: white;
+      margin: 0 20px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .navbar a:hover {
+      color: #ff9800;
+    }
+
+    /* Banner */
+    .banner {
+      background: url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/dgp024y-abbe8170-16c3-4e2c-9352-d9a531c317c0.png/v1/fill/w_1072,h_746,q_70,strp/right_through_u_by_ta_chi_na_dgp024y-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9ODkxIiwicGF0aCI6Ii9mLzA3NDI2ZDAyLWZiMzItNDkxNy1hMzhkLTdkOGE1M2JhY2IxNi9kZ3AwMjR5LWFiYmU4MTcwLTE2YzMtNGUyYy05MzUyLWQ5YTUzMWMzMTdjMC5wbmciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.XCjZxCZ7u0xbbEQPI3LVS9575PmprLlRwhSP3lBoY64") center/cover no-repeat;
+      color: white;
+      text-align: center;
+      padding: 100px 20px;
+    }
+
+    .banner h1 {
+      font-size: 3em;
+      margin: 0;
+      text-shadow: 2px 2px 8px black;
+    }
+
+    /* Gallery */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+
+    /* About Section */
+    .about {
+      padding: 50px 20px;
+      background: #fafafa;
+      text-align: center;
+    }
+
+    /* Footer */
+    footer {
+      background: #222;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <div class="navbar">
+    <a href="#">Home</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#about">About</a>
+    <a href="#contact">Website</a>
+  </div>
+
+  <!-- Banner -->
+  <div class="banner">
+    <h1>Virtual Art Show 2025</h1>
+    <p>Celebrating Creativity & Expression</p>
+  </div>
+
+  <!-- Gallery -->
+  <div id="gallery" class="gallery">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/diopyg5-e76a4bcc-773b-4f0f-afc0-c3a122449dfa.jpg/v1/fill/w_250,h_250,q_70,strp/drizzle_dance_by_ta_chi_na_diopyg5-250t.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGlvcHlnNS1lNzZhNGJjYy03NzNiLTRmMGYtYWZjMC1jM2ExMjI0NDlkZmEuanBnIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.Nj-QPo9W2qEiwbeaBOH0EINOOP2cR5rquxz6qOdmFpY" alt="Art 1">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/diopeg3-161afb33-d00c-4d0f-987a-abc3b62013ed.jpg/v1/fill/w_894,h_894,q_70,strp/wet_petal___by_ta_chi_na_diopeg3-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGlvcGVnMy0xNjFhZmIzMy1kMDBjLTRkMGYtOTg3YS1hYmMzYjYyMDEzZWQuanBnIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.zc3Sae2EgtcI6ROeR0VtTgYky05YwvRGzyicKO6GEpg" alt="Art 2">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/dis1hdb-253a15e8-31e5-4394-8100-d0474efbe915.jpg/v1/fill/w_894,h_894,q_70,strp/her_colours_by_ta_chi_na_dis1hdb-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGlzMWhkYi0yNTNhMTVlOC0zMWU1LTQzOTQtODEwMC1kMDQ3NGVmYmU5MTUuanBnIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.MDeMCwpPtKABhkeIPAVIXN28LXcdNifXkHBvI4HbEO4" alt="Art 3">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/dipr63j-660af7e6-71cd-4528-9bac-4749a542097c.jpg/v1/fill/w_894,h_894,q_70,strp/spectrum_sands_by_ta_chi_na_dipr63j-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGlwcjYzai02NjBhZjdlNi03MWNkLTQ1MjgtOWJhYy00NzQ5YTU0MjA5N2MuanBnIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.lrBU9IXCAW_DXmSozzFL8vKZGDl0wLaZKSq7suLjwiw" alt="Art 4">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/dipqyzu-08818420-e54d-4949-9a95-1afb2043cc2c.jpg/v1/fill/w_894,h_894,q_70,strp/apple_crown_royal_by_ta_chi_na_dipqyzu-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGlwcXl6dS0wODgxODQyMC1lNTRkLTQ5NDktOWE5NS0xYWZiMjA0M2NjMmMuanBnIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19._S7dWbWH0LWU1-31_l1V5nYUKmlwN9Av9mSuL4QT5iQ" alt="Art 5">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/diopur1-1ccedec2-f4d6-476f-80cd-00c82a113d3f.jpg/v1/fill/w_894,h_894,q_70,strp/oozy_read_by_ta_chi_na_diopur1-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGlvcHVyMS0xY2NlZGVjMi1mNGQ2LTQ3NmYtODBjZC0wMGM4MmExMTNkM2YuanBnIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.YQFKETL0UaUN3eNjGNYhA1ioWeDPkSLCjRCYP24i-Jo" alt="Art 6">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/dipqyd2-88fe165c-b6f2-4313-8b3f-ee8af58bdd16.jpg/v1/fill/w_894,h_894,q_70,strp/sun_ice__by_ta_chi_na_dipqyd2-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGlwcXlkMi04OGZlMTY1Yy1iNmYyLTQzMTMtOGIzZi1lZThhZjU4YmRkMTYuanBnIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.bQwraEghcPIV6Nbyq8_C0W04RhDueSruveUNyJosG5k" alt="Art 7">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/dipqwpr-0e8122b0-f675-4b53-b670-99ddfd47979e.jpg/v1/fill/w_894,h_894,q_70,strp/orange_squeeze__by_ta_chi_na_dipqwpr-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGlwcXdwci0wZTgxMjJiMC1mNjc1LTRiNTMtYjY3MC05OWRkZmQ0Nzk3OWUuanBnIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.FASsvAU4tIi329XnEPUvddCJgsQOU2dncDY_e-VywcI" alt="Art 8">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/diopc42-0c1fc002-98e5-4b1e-a76a-26f23a731a3e.jpg/v1/fill/w_894,h_894,q_70,strp/aslan_by_ta_chi_na_diopc42-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGlvcGM0Mi0wYzFmYzAwMi05OGU1LTRiMWUtYTc2YS0yNmYyM2E3MzFhM2UuanBnIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.24xCypTapcM7B-UbGGqqgVimEu1DRClXQHvx2zGuZcw" alt="Art 9">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/di5zym8-a2fd7507-5423-4525-92c1-0abc07e4c4b0.png/v1/fill/w_894,h_894,q_70,strp/fire_tail_by_ta_chi_na_di5zym8-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGk1enltOC1hMmZkNzUwNy01NDIzLTQ1MjUtOTJjMS0wYWJjMDdlNGM0YjAucG5nIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.PqmFlmPLwTxe3e_OyhwKv2iE5hLp8AZAieXdIMvI1d8" alt="Art 10">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/digcohu-9a73afe4-26cf-4cf0-bc54-04bfb4c5fd85.png/v1/fill/w_894,h_894,q_70,strp/united__by_ta_chi_na_digcohu-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGlnY29odS05YTczYWZlNC0yNmNmLTRjZjAtYmM1NC0wNGJmYjRjNWZkODUucG5nIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.Z4WqGXVg6mQArFn7QquhDazeV4uIja7RC7B8LvbfZtw" alt="Art 11">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/di6kym5-4e2a47f3-d109-408a-af06-dae068f2438a.png/v1/fill/w_894,h_894,q_70,strp/mr__masq_by_ta_chi_na_di6kym5-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGk2a3ltNS00ZTJhNDdmMy1kMTA5LTQwOGEtYWYwNi1kYWUwNjhmMjQzOGEucG5nIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.BJ0IHuC5Rs4aLDQ1Upp3nGE3mOdPVZGIiyvzhC2eSZw" alt="Art 12">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/di5zze5-53e1ec2d-9cd9-464b-9232-554a238dbd83.png/v1/fill/w_894,h_894,q_70,strp/pink_paw_by_ta_chi_na_di5zze5-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGk1enplNS01M2UxZWMyZC05Y2Q5LTQ2NGItOTIzMi01NTRhMjM4ZGJkODMucG5nIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.A09w-JIOYoqJYTu-W-n6L5pWtzsjyELUpAKF7oR3gKo" alt="Art 13">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/diopwhb-0bfd8059-26c4-4742-b333-832a146e4ef1.jpg/v1/fill/w_894,h_894,q_70,strp/melting_glamour_by_ta_chi_na_diopwhb-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGlvcHdoYi0wYmZkODA1OS0yNmM0LTQ3NDItYjMzMy04MzJhMTQ2ZTRlZjEuanBnIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.j96iwNgvCpUeaKPDYsoa3JCtxtDETaTClK3mp3NEWiE" alt="Art 14">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/dioph18-89861d53-57c1-41a5-933f-783519ffd5d7.jpg/v1/fill/w_894,h_894,q_70,strp/his_colours__by_ta_chi_na_dioph18-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGlvcGgxOC04OTg2MWQ1My01N2MxLTQxYTUtOTMzZi03ODM1MTlmZmQ1ZDcuanBnIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.zDNhC5tk_n9yeMCdSWP71ra4o5Bct_TIImmaXlzfkBE" alt="Art 15">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/dio85x5-596057e5-09cd-4273-9267-878263dfad97.jpg/v1/fill/w_894,h_894,q_70,strp/rainbow_waterfall__by_ta_chi_na_dio85x5-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGlvODV4NS01OTYwNTdlNS0wOWNkLTQyNzMtOTI2Ny04NzgyNjNkZmFkOTcuanBnIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.8hbJ2QXFahUsF_4QiqOGt5wUgGmFpcGRAuzEVPuEgxc" alt="Art 16">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/di4jioa-2fbad01b-773c-4619-9fbf-621df0cf6f6e.png/v1/fill/w_894,h_894,q_70,strp/working_minds_by_ta_chi_na_di4jioa-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGk0amlvYS0yZmJhZDAxYi03NzNjLTQ2MTktOWZiZi02MjFkZjBjZjZmNmUucG5nIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.OR7t64lv6Sp1jOnkUZr2qbPytZZooglDE8tq4DKgq-8" alt="Art 17">
+    <img src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/07426d02-fb32-4917-a38d-7d8a53bacb16/dilvq5o-53c6e60d-5361-4bff-b627-abd177ff5874.jpg/v1/fill/w_894,h_894,q_70,strp/melting_by_ta_chi_na_dilvq5o-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvZGlsdnE1by01M2M2ZTYwZC01MzYxLTRiZmYtYjYyNy1hYmQxNzdmZjU4NzQuanBnIiwiaGVpZ2h0IjoiPD05MDAiLCJ3aWR0aCI6Ijw9OTAwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLndhdGVybWFyayJdLCJ3bWsiOnsicGF0aCI6Ii93bS8wNzQyNmQwMi1mYjMyLTQ5MTctYTM4ZC03ZDhhNTNiYWNiMTYvdGEtY2hpLW5hLTQucG5nIiwib3BhY2l0eSI6OTUsInByb3BvcnRpb25zIjowLjQ1LCJncmF2aXR5IjoiY2VudGVyIn19.i1ul_r753AAYttcjCKVkWfuGrEzcsBPZI4xGgN8fYF4" alt="Art 18">
+  </div>
+
+  <!-- About -->
+  <div id="about" class="about">
+    <h2>About the Show</h2>
+    <p>
+      This exhibition brings together artists from around the world, to explore themes of identity, culture, 
+      and imagination. Each piece tells a story and invites you to look closer.
+    </p>
+  </div>
+
+<!-- Contact -->
+<section id="contact" style="text-align: center; padding: 40px 20px;">
+  <h2>Website</h2>
+  <p>
+    Find us at: 
+    <a href="https://www.sunsetbar.ca/" target="_blank">
+      SunSetBar.ca
+    </a>
+  </p>
+</section>
+
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 SunSetBar Virtual Art Show. All rights reserved.
+  </footer>
+
+</body>
+</html>

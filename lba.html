@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading Screen</title>
+  <style>
+    /* Overall screen */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      overflow: hidden;
+    }
+
+    /* Loading text */
+    .loading-text {
+      font-size: 2.5rem;
+      font-weight: bold;
+      font-family: 'Arial', sans-serif;
+      color: white;
+      margin-top: 20px;
+      z-index: 1;
+    }
+
+    /* Dots bouncing animation */
+    .dot {
+      animation: bounce 1.2s infinite;
+      display: inline-block;
+      margin-left: 3px;
+    }
+
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+    }
+
+    /* Animal emoji */
+    .animal {
+      font-size: 3rem;
+      color: white;
+      position: absolute;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      animation: animalBounce 1.5s infinite;
+    }
+
+    /* Bounce animation for animal */
+    @keyframes animalBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-40px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-screen">
+    <div class="loading-text">
+      Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+    </div>
+    <div class="animal-container"></div>
+  </div>
+
+  <script>
+    const animals = ["🐰", "🐱", "🦊", "🐻", "🐶", "🦁", "🐼"];
+    const container = document.querySelector(".animal-container");
+
+    // Create a single bouncing animal element
+    const animal = document.createElement("div");
+    animal.classList.add("animal");
+    animal.textContent = animals[0];
+    container.appendChild(animal);
+
+    let i = 0;
+
+    // Change the animal on each bounce
+    setInterval(() => {
+      i = (i + 1) % animals.length;
+      animal.textContent = animals[i];
+    }, 1500); // match bounce animation duration
+  </script>
+</body>
+</html>
