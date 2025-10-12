@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cozy Fireplace Animation 🔥</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="scene" id="scene">
+    <div class="room">
+      <div class="mantel">
+        <div class="picture-frame">
+          <div class="picture">Home</div>
+        </div>
+        <div class="candles">
+          <div class="candle"></div>
+          <div class="candle"></div>
+        </div>
+      </div>
+
+      <div class="hearth">
+        <div class="fire" id="fire">
+          <div class="flame flame-1"></div>
+          <div class="flame flame-2"></div>
+          <div class="flame flame-3"></div>
+          <div class="embers" id="embers"></div>
+        </div>
+
+        <div class="logs">
+          <div class="log log-1"></div>
+          <div class="log log-2"></div>
+          <div class="log log-3"></div>
+        </div>
+      </div>
+
+      <div class="floor"></div>
+    </div>
+
+    <div class="controls">
+      <label for="intensity">Fire intensity</label>
+      <input type="range" id="intensity" min="0" max="100" value="60">
+
+      <button id="soundToggle">Enable crackle</button>
+      <button id="sparkleBtn">Burst embers</button>
+    </div>
+  </div>
+
+  <audio id="crackle" src="sounds/crackle.mp3" loop preload="auto"></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
