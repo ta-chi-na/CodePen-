@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Galaxy of Kind Words ✨</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      overflow: hidden;
+      background: radial-gradient(ellipse at center, #050505 0%, #000000 100%);
+      height: 100vh;
+      width: 100vw;
+      font-family: "Poppins", sans-serif;
+      color: #fff;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="galaxy"></canvas>
+
+  <script>
+    const canvas = document.getElementById("galaxy");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const stars = [];
+    const numStars = 500;
+    const words = [
+      "You are enough 💫",
+      "Keep shining ✨",
+      "Breathe and believe 🌙",
+      "You are loved 💜",
+      "Your light matters 🌟",
+      "Stay gentle with yourself 🌸",
+      "You’ve got this 💪",
+      "One step at a time 🌈"
+    ];
+
+    const floatingWords = [];
+
+    // generate stars
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        z: Math.random() * canvas.width,
+        color: "hsl(" + Math.random() * 360 + ", 100%, 80%)"
+      });
+    }
+
+    let mouseX = canvas.width / 2;
+    let mouseY = canvas.height / 2;
+
+    canvas.addEventListener("mousemove", (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    // spawn floating words occasionally
+    setInterval(() => {
+      const randomWord = words[Math.floor(Math.random() * words.length)];
+      floatingWords.push({
+        text: randomWord,
+        x: Math.random() * canvas.width,
+        y: canvas.height + 40,
+        opacity: 1
+      });
+    }, 2500);
+
+    function drawStars() {
+      for (let star of stars) {
+        star.z -= 2;
+        if (star.z <= 0) star.z = canvas.width;
+
+        const sx = (star.x - mouseX) * (canvas.width / star.z) + canvas.width / 2;
+        const sy = (star.y - mouseY) * (canvas.width / star.z) + canvas.height / 2;
+        const radius = (1 - star.z / canvas.width) * 2;
+
+        ctx.beginPath();
+        ctx.fillStyle = star.color;
+        ctx.arc(sx, sy, radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawWords() {
+      ctx.font = "24px Poppins";
+      ctx.textAlign = "center";
+
+      for (let i = 0; i < floatingWords.length; i++) {
+        const w = floatingWords[i];
+        ctx.fillStyle = "rgba(255, 255, 255," + w.opacity + ")";
+        ctx.fillText(w.text, w.x, w.y);
+        w.y -= 0.5;
+        w.opacity -= 0.002;
+
+        if (w.opacity <= 0) {
+          floatingWords.splice(i, 1);
+          i--;
+        }
+      }
+    }
+
+    function animate() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      drawStars();
+      drawWords();
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
