@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sunset Ocean Waves 🌅🌊</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      height: 100vh;
+      background: linear-gradient(
+        to bottom,
+        #ffb347,   /* soft orange */
+        #ffcc33,   /* yellow sunset */
+        #f76a8c,   /* pink */
+        #355c7d,   /* blue-purple twilight */
+        #0b2e59    /* deep ocean */
+      );
+      background-size: 100% 200%;
+      animation: skyShift 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes skyShift {
+      0% {
+        background-position: 0% 0%;
+      }
+      100% {
+        background-position: 0% 100%;
+      }
+    }
+
+    canvas {
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="ocean"></canvas>
+
+  <script>
+    const canvas = document.getElementById("ocean");
+    const ctx = canvas.getContext("2d");
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const waves = [
+      { amplitude: 25, length: 0.015, speed: 0.02, color: "rgba(255,255,255,0.4)" },
+      { amplitude: 20, length: 0.02, speed: 0.015, color: "rgba(173, 216, 230, 0.3)" },
+      { amplitude: 15, length: 0.025, speed: 0.01, color: "rgba(255,255,255,0.2)" },
+    ];
+
+    let t = 0;
+
+    function drawSun() {
+      const gradient = ctx.createRadialGradient(width / 2, height / 3, 50, width / 2, height / 3, 200);
+      gradient.addColorStop(0, "rgba(255, 230, 180, 1)");
+      gradient.addColorStop(1, "rgba(255, 230, 180, 0)");
+
+      ctx.beginPath();
+      ctx.arc(width / 2, height / 3, 100, 0, Math.PI * 2);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+    }
+
+    function drawWave({ amplitude, length, speed, color }) {
+      ctx.beginPath();
+      ctx.moveTo(0, height);
+      for (let x = 0; x <= width; x++) {
+        const y =
+          Math.sin(x * length + t * speed) * amplitude +
+          Math.cos(x * length * 0.3 + t * speed * 1.5) * (amplitude / 2) +
+          height - 100;
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(width, height);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      drawSun();
+      for (let wave of waves) {
+        drawWave(wave);
+      }
+      t += 1;
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener("resize", () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
