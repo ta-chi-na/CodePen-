@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Word Guess Game 🎯</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+      font-family: "Poppins", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .game-container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      padding: 30px 40px;
+      text-align: center;
+      width: 320px;
+    }
+
+    h1 {
+      color: #2a5298;
+    }
+
+    .word-display {
+      letter-spacing: 10px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin: 20px 0;
+      color: #333;
+    }
+
+    .input-area {
+      margin-bottom: 15px;
+    }
+
+    input {
+      width: 150px;
+      font-size: 1.2rem;
+      text-align: center;
+      padding: 5px;
+    }
+
+    button {
+      background: #2a5298;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #1e3c72;
+    }
+
+    .message {
+      margin: 10px 0;
+      font-weight: bold;
+      color: #444;
+    }
+
+    .wrong {
+      color: #ff5252;
+      font-size: 1rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>🎯 Word Guess Game</h1>
+    <p class="hint"></p>
+    <div id="wordDisplay" class="word-display"></div>
+
+    <div class="input-area">
+      <input type="text" id="letterInput" placeholder="Type a letter or word" />
+      <button id="guessBtn">Guess</button>
+    </div>
+
+    <p class="message"></p>
+    <p class="wrong">Wrong letters: <span id="wrongLetters"></span></p>
+
+    <button id="restartBtn" class="hidden">Play Again</button>
+  </div>
+
+  <script>
+    const wordList = [
+      { word: "ocean", hint: "Large body of salt water" },
+      { word: "rainbow", hint: "Appears after rain" },
+      { word: "sunset", hint: "The sun going down" },
+      { word: "flower", hint: "Grows in gardens" },
+      { word: "island", hint: "Land surrounded by water" },
+      { word: "cloud", hint: "Floats in the sky" },
+      { word: "forest", hint: "Home to many trees" },
+    ];
+
+    let chosenWord = "";
+    let guessedLetters = [];
+    let wrongLetters = [];
+    let maxTries = 6;
+
+    const wordDisplay = document.getElementById("wordDisplay");
+    const letterInput = document.getElementById("letterInput");
+    const guessBtn = document.getElementById("guessBtn");
+    const message = document.querySelector(".message");
+    const wrongDisplay = document.getElementById("wrongLetters");
+    const restartBtn = document.getElementById("restartBtn");
+    const hint = document.querySelector(".hint");
+
+    function startGame() {
+      const random = wordList[Math.floor(Math.random() * wordList.length)];
+      chosenWord = random.word.toUpperCase();
+      hint.textContent = `💡 Hint: ${random.hint}`;
+      guessedLetters = [];
+      wrongLetters = [];
+      message.textContent = "Let's start guessing!";
+      wrongDisplay.textContent = "";
+      restartBtn.classList.add("hidden");
+      letterInput.disabled = false;
+      guessBtn.disabled = false;
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      let displayWord = "";
+      for (let letter of chosenWord) {
+        displayWord += guessedLetters.includes(letter) ? `${letter} ` : "_ ";
+      }
+      wordDisplay.textContent = displayWord.trim();
+
+      // ✅ Win condition
+      if (!displayWord.includes("_")) {
+        message.textContent = `🎉 You guessed it! The word was "${chosenWord}". Great job!`;
+        restartBtn.classList.remove("hidden");
+        letterInput.disabled = true;
+        guessBtn.disabled = true;
+      }
+    }
+
+    guessBtn.addEventListener("click", () => {
+      let guess = letterInput.value.toUpperCase().trim();
+      letterInput.value = "";
+
+      if (!guess.match(/^[A-Z]+$/)) {
+        message.textContent = "⚠️ Please enter letters only (A–Z).";
+        return;
+      }
+
+      // ✅ Whole word guess
+      if (guess.length > 1) {
+        if (guess === chosenWord) {
+          message.textContent = `🎉 Correct! The word was "${chosenWord}".`;
+          guessedLetters = [...chosenWord];
+          updateDisplay();
+          restartBtn.classList.remove("hidden");
+          letterInput.disabled = true;
+          guessBtn.disabled = true;
+        } else {
+          wrongLetters.push(guess);
+          message.textContent = `❌ Nope! "${guess}" isn't the word.`;
+          wrongDisplay.textContent = wrongLetters.join(", ");
+        }
+        return;
+      }
+
+      // ✅ Single letter guess
+      const letter = guess;
+      if (guessedLetters.includes(letter) || wrongLetters.includes(letter)) {
+        message.textContent = "⏳ You already tried that one!";
+        return;
+      }
+
+      if (chosenWord.includes(letter)) {
+        guessedLetters.push(letter);
+        message.textContent = "✅ Nice! That letter is in the word!";
+      } else {
+        wrongLetters.push(letter);
+        const remaining = maxTries - wrongLetters.length;
+        message.textContent = `❌ Nope! ${remaining} tries left.`;
+      }
+
+      if (wrongLetters.length >= maxTries) {
+        message.textContent = `💀 Game over! The word was "${chosenWord}".`;
+        restartBtn.classList.remove("hidden");
+        letterInput.disabled = true;
+        guessBtn.disabled = true;
+      }
+
+      wrongDisplay.textContent = wrongLetters.join(" ");
+      updateDisplay();
+    });
+
+    restartBtn.addEventListener("click", startGame);
+
+    startGame();
+  </script>
+</body>
+</html>
