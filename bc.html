@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bitcoin Bubble Chart 💰</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background: #0e0e12;
+      color: white;
+      font-family: "Times New Roman", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .chart-container {
+      position: relative;
+      width: 90%;
+      max-width: 700px;
+      height: 500px;
+      background: #18181f;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="chart-container">
+    <canvas id="bubbleChart"></canvas>
+  </div>
+
+  <script>
+    const ctx = document.getElementById('bubbleChart').getContext('2d');
+    Chart.defaults.font.family = "Times New Roman";
+
+    async function getBitcoinData() {
+      const res = await fetch(
+        'https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=1'
+      );
+      const data = await res.json();
+
+      return data.prices.map((p, i) => ({
+        x: i,
+        y: p[1],
+        r: Math.random() * 12 + 5
+      }));
+    }
+
+    async function createChart() {
+      const bubbleData = await getBitcoinData();
+
+      new Chart(ctx, {
+        type: 'bubble',
+        data: {
+          datasets: [
+            {
+              label: 'Bitcoin 💛',
+              data: bubbleData.slice(0, 30),
+              backgroundColor: 'rgba(255, 205, 86, 0.7)',
+              borderColor: '#ffcc00',
+              borderWidth: 1
+            },
+            {
+              label: 'BTC Volume 🔴',
+              data: bubbleData.slice(30, 60),
+              backgroundColor: 'rgba(255, 99, 132, 0.6)',
+              borderColor: '#ff4b4b',
+              borderWidth: 1
+            },
+            {
+              label: 'BTC Trades 🔘',
+              data: bubbleData.slice(60, 90),
+              backgroundColor: 'rgba(180, 180, 180, 0.6)',
+              borderColor: '#a8a8a8',
+              borderWidth: 1
+            }
+          ],
+        },
+        options: {
+          responsive: true,
+          animation: {
+            duration: 1500,
+            easing: 'easeOutQuart'
+          },
+          plugins: {
+            legend: {
+              labels: { color: 'white' }
+            },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `$${ctx.raw.y.toLocaleString()}`
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: 'white' },
+              grid: { color: 'rgba(255,255,255,0.1)' },
+              title: { display: true, text: 'Time Index', color: 'white' }
+            },
+            y: {
+              ticks: { color: 'white' },
+              grid: { color: 'rgba(255,255,255,0.1)' },
+              title: { display: true, text: 'Price (USD)', color: 'white' }
+            }
+          }
+        }
+      });
+    }
+
+    createChart();
+
+    // Refresh every 60 seconds
+    setInterval(() => {
+      document.querySelector('#bubbleChart').remove();
+      const newCanvas = document.createElement('canvas');
+      newCanvas.id = 'bubbleChart';
+      document.querySelector('.chart-container').appendChild(newCanvas);
+      const newCtx = newCanvas.getContext('2d');
+      Chart.defaults.font.family = "Times New Roman";
+      (async () => {
+        const bubbleData = await getBitcoinData();
+        new Chart(newCtx, {
+          type: 'bubble',
+          data: {
+            datasets: [
+              {
+                label: 'Bitcoin 💛',
+                data: bubbleData.slice(0, 30),
+                backgroundColor: 'rgba(255, 205, 86, 0.7)',
+                borderColor: '#ffcc00',
+                borderWidth: 1
+              },
+              {
+                label: 'BTC Volume 🔴',
+                data: bubbleData.slice(30, 60),
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                borderColor: '#ff4b4b',
+                borderWidth: 1
+              },
+              {
+                label: 'BTC Trades 🔘',
+                data: bubbleData.slice(60, 90),
+                backgroundColor: 'rgba(180, 180, 180, 0.6)',
+                borderColor: '#a8a8a8',
+                borderWidth: 1
+              }
+            ],
+          },
+          options: {
+            responsive: true,
+            animation: {
+              duration: 1500,
+              easing: 'easeOutQuart'
+            },
+            plugins: {
+              legend: {
+                labels: { color: 'white' }
+              },
+              tooltip: {
+                callbacks: {
+                  label: (ctx) => `$${ctx.raw.y.toLocaleString()}`
+                }
+              }
+            },
+            scales: {
+              x: {
+                ticks: { color: 'white' },
+                grid: { color: 'rgba(255,255,255,0.1)' },
+                title: { display: true, text: 'Time Index', color: 'white' }
+              },
+              y: {
+                ticks: { color: 'white' },
+                grid: { color: 'rgba(255,255,255,0.1)' },
+                title: { display: true, text: 'Price (USD)', color: 'white' }
+              }
+            }
+          }
+        });
+      })();
+    }, 60000);
+  </script>
+</body>
+</html>
