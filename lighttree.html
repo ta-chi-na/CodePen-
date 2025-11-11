@@ -1,0 +1,282 @@
+<!doctype html>
+<!-- interactive-tree.html
+     Single-file HTML page: a decorative tree with programmable lights.
+     - Modes: twinkle, chase, rainbow, off
+     - Click bulbs to toggle individually
+     - Works well inside GitHub Codespaces or any static host
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Interactive Light Tree</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --tree:#0b5f2a;
+      --trunk:#5a3b25;
+      --accent:#ffd166;
+      --panel: rgba(255,255,255,0.06);
+    }
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, Arial, sans-serif;background:linear-gradient(180deg,var(--bg), #071025);color:#eef;display:flex;align-items:center;justify-content:center}
+    .app{width:100%;max-width:960px;padding:24px;box-sizing:border-box}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:18px;box-shadow:0 6px 24px rgba(2,6,23,0.6);display:grid;grid-template-columns:1fr 320px;gap:18px}
+    .canvas{display:flex;align-items:center;justify-content:center;padding:6px}
+    svg{width:100%;height:720px;max-height:78vh}
+    .controls{padding:12px;background:var(--panel);border-radius:8px}
+    .controls h3{margin:0 0 8px 0;font-size:16px;color:#fff}
+    .row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+    .btn{background:transparent;border:1px solid rgba(255,255,255,0.08);padding:8px 12px;border-radius:8px;color:#fff;cursor:pointer}
+    .btn.active{border-color:var(--accent);box-shadow:0 4px 18px rgba(255,209,102,0.12);}
+    .small{font-size:13px;color:#cfe}
+    input[type=range]{width:100%}
+    .hint{font-size:12px;color:#9fb}
+    footer{margin-top:12px;font-size:12px;color:#9aa}
+    @media (max-width:880px){.card{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="card">
+      <div class="canvas">
+        <!-- SVG Christmas-style tree with bulbs (each bulb has an id bulb-N) -->
+        <svg id="treeSVG" viewBox="0 0 600 900" xmlns="http://www.w3.org/2000/svg" aria-label="Interactive tree with lights">
+          <defs>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- background ornaments/shimmers -->
+          <rect width="100%" height="100%" fill="none"></rect>
+
+          <!-- tree shape -->
+          <g transform="translate(300,120)">
+            <path d="M0 0 L-180 160 L-90 160 L-240 320 L-120 320 L-300 520 L300 520 L120 320 L240 320 L90 160 L180 160 Z" fill="var(--tree)" transform="translate(0,0) scale(0.9)"/>
+            <!-- trunk -->
+            <rect x="-40" y="520" width="80" height="120" rx="8" fill="var(--trunk)"/>
+
+            <!-- bulbs group (positions are hand-tuned) -->
+            <g id="bulbs">
+              <!-- generate bulbs with ids bulb-0 ... bulb-31 -->
+              <!-- level 1 (top) -->
+              <circle id="bulb-0"  cx="0"   cy="30"  r="8"  data-index="0"  class="bulb"/>
+
+              <!-- level 2 -->
+              <circle id="bulb-1"  cx="-40" cy="90"  r="8"  data-index="1"  class="bulb"/>
+              <circle id="bulb-2"  cx="40"  cy="90"  r="8"  data-index="2"  class="bulb"/>
+
+              <!-- level 3 -->
+              <circle id="bulb-3"  cx="-80" cy="150" r="8"  data-index="3"  class="bulb"/>
+              <circle id="bulb-4"  cx="0"   cy="150" r="8"  data-index="4"  class="bulb"/>
+              <circle id="bulb-5"  cx="80"  cy="150" r="8"  data-index="5"  class="bulb"/>
+
+              <!-- level 4 -->
+              <circle id="bulb-6"  cx="-120" cy="210" r="8"  data-index="6"  class="bulb"/>
+              <circle id="bulb-7"  cx="-40"  cy="210" r="8"  data-index="7"  class="bulb"/>
+              <circle id="bulb-8"  cx="40"   cy="210" r="8"  data-index="8"  class="bulb"/>
+              <circle id="bulb-9"  cx="120"  cy="210" r="8"  data-index="9"  class="bulb"/>
+
+              <!-- level 5 -->
+              <circle id="bulb-10" cx="-160" cy="270" r="8"  data-index="10" class="bulb"/>
+              <circle id="bulb-11" cx="-80"  cy="270" r="8"  data-index="11" class="bulb"/>
+              <circle id="bulb-12" cx="0"    cy="270" r="8"  data-index="12" class="bulb"/>
+              <circle id="bulb-13" cx="80"   cy="270" r="8"  data-index="13" class="bulb"/>
+              <circle id="bulb-14" cx="160"  cy="270" r="8"  data-index="14" class="bulb"/>
+
+              <!-- level 6 -->
+              <circle id="bulb-15" cx="-200" cy="330" r="8"  data-index="15" class="bulb"/>
+              <circle id="bulb-16" cx="-120" cy="330" r="8"  data-index="16" class="bulb"/>
+              <circle id="bulb-17" cx="-40"  cy="330" r="8"  data-index="17" class="bulb"/>
+              <circle id="bulb-18" cx="40"   cy="330" r="8"  data-index="18" class="bulb"/>
+              <circle id="bulb-19" cx="120"  cy="330" r="8"  data-index="19" class="bulb"/>
+              <circle id="bulb-20" cx="200"  cy="330" r="8"  data-index="20" class="bulb"/>
+
+              <!-- level 7 -->
+              <circle id="bulb-21" cx="-240" cy="390" r="8"  data-index="21" class="bulb"/>
+              <circle id="bulb-22" cx="-160" cy="390" r="8"  data-index="22" class="bulb"/>
+              <circle id="bulb-23" cx="-80"  cy="390" r="8"  data-index="23" class="bulb"/>
+              <circle id="bulb-24" cx="0"    cy="390" r="8"  data-index="24" class="bulb"/>
+              <circle id="bulb-25" cx="80"   cy="390" r="8"  data-index="25" class="bulb"/>
+              <circle id="bulb-26" cx="160"  cy="390" r="8"  data-index="26" class="bulb"/>
+              <circle id="bulb-27" cx="240"  cy="390" r="8"  data-index="27" class="bulb"/>
+
+              <!-- level 8 (near trunk) -->
+              <circle id="bulb-28" cx="-80"  cy="450" r="8"  data-index="28" class="bulb"/>
+              <circle id="bulb-29" cx="0"    cy="450" r="8"  data-index="29" class="bulb"/>
+              <circle id="bulb-30" cx="80"   cy="450" r="8"  data-index="30" class="bulb"/>
+
+              <!-- star / topper (decorative) -->
+              <polygon id="star" points="0,-10 6,6 -8,-2 8,-2 -6,6" transform="translate(0,6) scale(2.2)" fill="var(--accent)"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+
+      <div class="controls" role="region" aria-label="Controls">
+        <h3>Tree Light Controls</h3>
+        <div class="row">
+          <button class="btn mode-btn active" data-mode="twinkle">Twinkle</button>
+          <button class="btn mode-btn" data-mode="chase">Chase</button>
+          <button class="btn mode-btn" data-mode="rainbow">Rainbow</button>
+          <button class="btn mode-btn" data-mode="off">Off</button>
+        </div>
+
+        <div class="row">
+          <label class="small">Speed</label>
+          <input id="speed" type="range" min="50" max="1200" value="300">
+        </div>
+
+        <div class="row">
+          <label class="small">Brightness</label>
+          <input id="brightness" type="range" min="0.2" max="2.0" step="0.05" value="1">
+        </div>
+
+        <div class="row">
+          <button id="randomColor" class="btn">Random Color</button>
+          <button id="reset" class="btn">Reset</button>
+        </div>
+
+        <p class="hint">Click any bulb on the tree to toggle it on/off. Use modes to change animation.</p>
+        <footer>Open this file in GitHub Codespaces (or any browser) — it runs without a server.</footer>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Core behavior
+    const bulbs = Array.from(document.querySelectorAll('#bulbs .bulb'));
+    const modes = document.querySelectorAll('.mode-btn');
+    const speedEl = document.getElementById('speed');
+    const brightnessEl = document.getElementById('brightness');
+    const randomColorBtn = document.getElementById('randomColor');
+    const resetBtn = document.getElementById('reset');
+
+    // State
+    let mode = 'twinkle';
+    let timer = null;
+    let interval = Number(speedEl.value);
+    let brightness = Number(brightnessEl.value);
+
+    // color palette
+    const palette = ['#ff3b30','#ff9500','#ffd60a','#32d74b','#0a84ff','#5e5ce6','#ff2d55'];
+
+    // initialize bulbs data
+    const bulbState = bulbs.map((b,i)=>({ el:b, on:false, color: palette[i % palette.length] }));
+
+    // SVG show/hide style
+    function renderBulb(b, intensity=1){
+      const el = b.el;
+      if(!b.on){
+        el.setAttribute('fill','rgba(255,255,255,0.04)');
+        el.style.filter = 'none';
+        el.setAttribute('opacity','0.6');
+      } else {
+        el.setAttribute('fill', b.color);
+        el.style.filter = 'url(#glow)';
+        el.setAttribute('opacity', Math.min(1,0.6 + intensity*0.5*brightness));
+      }
+    }
+
+    // initial render
+    bulbState.forEach(b=>renderBulb(b, 0));
+
+    // allow click toggling per bulb
+    bulbState.forEach((b, idx)=>{
+      b.el.style.cursor = 'pointer';
+      b.el.addEventListener('click', (e)=>{
+        b.on = !b.on;
+        renderBulb(b, b.on?1:0);
+      });
+      // add hover title
+      b.el.setAttribute('title', 'Light ' + idx);
+    });
+
+    // mode handlers
+    function stopTimer(){ if(timer) { clearInterval(timer); timer=null; } }
+
+    function startTimer(){ stopTimer(); interval = Number(speedEl.value); if(mode==='off') return;
+      if(mode==='twinkle'){
+        timer = setInterval(()=>{
+          // pick a few bulbs to toggle or pulse
+          const pickCount = Math.max(1, Math.floor(bulbState.length * 0.12));
+          for(let i=0;i<pickCount;i++){
+            const idx = Math.floor(Math.random()*bulbState.length);
+            const b = bulbState[idx];
+            // pulse on briefly then off
+            b.on = true; b.color = palette[Math.floor(Math.random()*palette.length)];
+            renderBulb(b, 1);
+            setTimeout(()=>{ b.on = Math.random() < 0.25; renderBulb(b, b.on?1:0); }, Math.max(150, interval*0.6));
+          }
+        }, interval);
+      } else if(mode==='chase'){
+        let i=0;
+        // set all off initially
+        bulbState.forEach(b=>{ b.on=false; renderBulb(b,0); });
+        timer = setInterval(()=>{
+          // turn off previous, turn on next
+          const prev = (i-2+bulbState.length)%bulbState.length;
+          bulbState[prev].on = false; renderBulb(bulbState[prev],0);
+          bulbState[i].on = true; bulbState[i].color = palette[i%palette.length]; renderBulb(bulbState[i],1);
+          i = (i+1) % bulbState.length;
+        }, Math.max(80, interval/6));
+      } else if(mode==='rainbow'){
+        let hue = 0;
+        timer = setInterval(()=>{
+          hue = (hue + 6) % 360;
+          bulbState.forEach((b, idx)=>{ b.on=true; const h = (hue + idx*12)%360; b.color = `hsl(${h} 90% 60%)`; renderBulb(b,1); });
+        }, Math.max(40, interval/8));
+      }
+    }
+
+    // UI wiring
+    modes.forEach(btn=> btn.addEventListener('click', ()=>{
+      modes.forEach(x=>x.classList.remove('active'));
+      btn.classList.add('active');
+      mode = btn.dataset.mode;
+      if(mode==='off'){
+        bulbState.forEach(b=>{ b.on=false; renderBulb(b,0); });
+        stopTimer();
+      } else {
+        startTimer();
+      }
+    }));
+
+    speedEl.addEventListener('input', ()=>{ interval = Number(speedEl.value); if(timer) startTimer(); });
+    brightnessEl.addEventListener('input', ()=>{ brightness = Number(brightnessEl.value); bulbState.forEach(b=>renderBulb(b,b.on?1:0)); });
+
+    randomColorBtn.addEventListener('click', ()=>{
+      bulbState.forEach(b=>{ b.color = palette[Math.floor(Math.random()*palette.length)]; });
+      bulbState.forEach(b=>renderBulb(b,b.on?1:0));
+    });
+
+    resetBtn.addEventListener('click', ()=>{
+      // reset to default off
+      bulbState.forEach((b,i)=>{ b.on=false; b.color = palette[i % palette.length]; renderBulb(b,0); });
+      mode='twinkle'; modes.forEach(x=>x.classList.remove('active')); document.querySelector('.mode-btn[data-mode=twinkle]').classList.add('active');
+      startTimer();
+    });
+
+    // keyboard shortcut: space toggles pause
+    let paused = false;
+    document.addEventListener('keydown',(e)=>{
+      if(e.code==='Space'){ e.preventDefault(); paused = !paused; if(paused) stopTimer(); else startTimer(); }
+    });
+
+    // start default
+    startTimer();
+
+    // accessibility: announce mode changes
+    modes.forEach(b=>b.addEventListener('click', ()=>{
+      const ar = document.createElement('div');
+      ar.setAttribute('aria-live','polite'); ar.style.position='absolute'; ar.style.left='-9999px';
+      ar.textContent = 'Mode set to ' + b.dataset.mode;
+      document.body.appendChild(ar); setTimeout(()=>document.body.removeChild(ar),800);
+    }));
+  </script>
+</body>
+</html>
