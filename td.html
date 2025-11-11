@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Interactive Ornament Decorator</title>
+<style>
+  :root{
+    --bg: linear-gradient(180deg,#071428,#021018);
+    --panel: rgba(255,255,255,0.04);
+    --accent: #ffd166;
+    --muted: rgba(255,255,255,0.6);
+  }
+  html,body{height:100%;margin:0;font-family:Inter, system-ui, Arial, sans-serif;background:var(--bg);color:white}
+  .wrap{max-width:1200px;margin:20px auto;padding:18px;display:grid;grid-template-columns:1fr 360px;gap:18px}
+  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;padding:12px;box-shadow:0 6px 30px rgba(0,0,0,0.6)}
+  .canvas{height:820px;display:flex;align-items:center;justify-content:center}
+  svg{width:100%;height:100%;max-height:820px;display:block}
+  .sidebar{padding:12px}
+  h2{margin:6px 0 12px 0;font-size:18px}
+  .palette{display:flex;flex-wrap:wrap;gap:10px}
+  .pitem{width:64px;height:64px;border-radius:10px;background:var(--panel);display:flex;align-items:center;justify-content:center;cursor:grab;border:1px solid rgba(255,255,255,0.04)}
+  .controls{margin-top:12px;display:flex;flex-direction:column;gap:8px}
+  button{background:transparent;border:1px solid rgba(255,255,255,0.08);padding:8px 12px;border-radius:8px;color:white;cursor:pointer}
+  .hint{font-size:13px;color:var(--muted);margin-top:10px}
+  .small{font-size:13px;color:var(--muted)}
+  .row{display:flex;gap:8px}
+  .label{font-size:13px;color:var(--muted)}
+  .info{font-size:12px;color:#bcd}
+  @media (max-width:1080px){.wrap{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="canvas" id="canvasWrap">
+        <!-- SVG Tree (large) -->
+        <svg id="treeSVG" viewBox="0 0 800 1000" xmlns="http://www.w3.org/2000/svg" aria-label="Decoratable Christmas tree">
+          <defs>
+            <linearGradient id="treeGrad" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stop-color="#0E6A2D"/>
+              <stop offset="100%" stop-color="#063B1C"/>
+            </linearGradient>
+            <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="6" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- background circle glow -->
+          <circle cx="400" cy="500" r="420" fill="#001827" opacity="0.6"></circle>
+          <circle cx="400" cy="500" r="420" fill="url(#treeGrad)" opacity="0.02"/>
+
+          <!-- big tree shape -->
+          <g id="treeGroup" transform="translate(0,30)">
+            <path d="M400 40 L220 240 L310 240 L160 420 L280 420 L80 640 L720 640 L520 420 L640 420 L490 240 L580 240 Z"
+                  fill="url(#treeGrad)"/>
+            <rect x="360" y="640" width="80" height="140" rx="8" fill="#6b3f24"/>
+          </g>
+
+          <!-- ornaments placed here -->
+          <g id="ornamentsGroup"></g>
+
+          <!-- invisible hit area matching tree shape (for drop detection) -->
+          <path id="treeHit" d="M400 40 L220 240 L310 240 L160 420 L280 420 L80 640 L720 640 L520 420 L640 420 L490 240 L580 240 Z" fill="transparent"/>
+        </svg>
+      </div>
+    </div>
+
+    <aside class="card sidebar" aria-label="Ornament controls">
+      <h2>Ornament Palette</h2>
+      <div class="palette" id="palette">
+        <!-- palette items (inline SVG icons) -->
+        <div class="pitem" data-type="bauble" title="Bauble (red)">
+          <svg width="44" height="44" viewBox="0 0 24 24"><circle cx="12" cy="13" r="6" fill="#ff3b30" stroke="#800" stroke-width="0.5"/><rect x="10" y="5" width="4" height="2" fill="#664"/></svg>
+        </div>
+
+        <div class="pitem" data-type="gold" title="Gold bauble">
+          <svg width="44" height="44" viewBox="0 0 24 24"><circle cx="12" cy="13" r="6" fill="#ffd60a" stroke="#b88600" stroke-width="0.5"/><rect x="10" y="5" width="4" height="2" fill="#b88600"/></svg>
+        </div>
+
+        <div class="pitem" data-type="star" title="Star">
+          <svg width="44" height="44" viewBox="0 0 24 24"><polygon points="12,2 14.5,9 22,9 16,13 18.5,20 12,15 5.5,20 8,13 2,9 9.5,9" fill="#ffd166"/></svg>
+        </div>
+
+        <div class="pitem" data-type="green" title="Green bauble">
+          <svg width="44" height="44" viewBox="0 0 24 24"><circle cx="12" cy="13" r="6" fill="#32d74b" stroke="#0b6b2b" stroke-width="0.5"/><rect x="10" y="5" width="4" height="2" fill="#0b6b2b"/></svg>
+        </div>
+
+        <div class="pitem" data-type="ribbon" title="Ribbon">
+          <svg width="44" height="44" viewBox="0 0 24 24"><path d="M4 6c0-1.1.9-2 2-2h12c1.1 0 2 .9 2 2v5c-3 0-4 2-6 2-2 0-3-2-6-2-2 0-3 2-6 2V6z" fill="#d62828"/></svg>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="row">
+          <button id="saveBtn">Save Design</button>
+          <button id="loadBtn">Load Design</button>
+          <button id="clearBtn">Clear</button>
+        </div>
+
+        <div class="row">
+          <button id="exportBtn">Export SVG</button>
+          <button id="centerBtn">Center Ornaments</button>
+        </div>
+
+        <p class="hint">Drag an ornament (hold mouse or tap) from the palette onto the tree. After placing you can drag placed ornaments to reposition. Right-click a placed ornament to remove it.</p>
+
+        <p class="info">Saved designs are stored locally in your browser (localStorage). Works in Codespaces preview/browser.</p>
+      </div>
+    </aside>
+  </div>
+
+<script>
+/*
+  Interactive Ornament Decorator
+  - Drag from palette to tree
+  - Place ornaments as SVG elements inside #ornamentsGroup
+  - Save/load positions to localStorage
+  - Export decorated SVG
+  - Supports touch and mouse
+*/
+
+// Utils
+function svgPoint(svg, x, y){
+  const pt = svg.createSVGPoint();
+  pt.x = x; pt.y = y;
+  return pt.matrixTransform(svg.getScreenCTM().inverse());
+}
+
+function createOrnamentSVG(type, id){
+  // returns an <g> element with shapes for the ornament
+  const g = document.createElementNS('http://www.w3.org/2000/svg','g');
+  g.setAttribute('data-type', type);
+  g.setAttribute('data-id', id);
+  g.setAttribute('cursor','move');
+
+  if(type === 'bauble'){
+    g.innerHTML = '<circle cx="0" cy="0" r="18" fill="#ff3b30" stroke="#800" stroke-width="1"/>'
+                + '<rect x="-6" y="-26" width="12" height="6" rx="1" fill="#664"/>';
+  } else if(type === 'gold'){
+    g.innerHTML = '<circle cx="0" cy="0" r="18" fill="#ffd60a" stroke="#b88600" stroke-width="1"/>'
+                + '<rect x="-6" y="-26" width="12" height="6" rx="1" fill="#b88600"/>';
+  } else if(type === 'star'){
+    g.innerHTML = '<polygon points="0,-20 5,-6 20,-6 8,2 12,18 0,8 -12,18 -8,2 -20,-6 -5,-6" fill="#ffd166" stroke="#c39414" stroke-width="0.8"/>';
+  } else if(type === 'green'){
+    g.innerHTML = '<circle cx="0" cy="0" r="18" fill="#32d74b" stroke="#0b6b2b" stroke-width="1"/>'
+                + '<rect x="-6" y="-26" width="12" height="6" rx="1" fill="#0b6b2b"/>';
+  } else if(type === 'ribbon'){
+    g.innerHTML = '<path d="M-20,0 C-12,-8  -8,-8 0,0 8,-8 12,-8 20,0 12,12 8,12 0,2 -8,12 -12,12 -20,0" fill="#d62828" />';
+  } else {
+    g.innerHTML = '<circle cx="0" cy="0" r="14" fill="#aaa"/>';
+  }
+
+  // add a small transform anchor
+  g.setAttribute('transform', 'translate(400,200) rotate(0) scale(1)');
+  return g;
+}
+
+// app state
+const svg = document.getElementById('treeSVG');
+const ornamentsGroup = document.getElementById('ornamentsGroup');
+const palette = document.getElementById('palette');
+const treeHit = document.getElementById('treeHit');
+
+let idCounter = 1;
+let dragState = { dragging:false, node:null, offsetX:0, offsetY:0, sourceType:null, clone:null };
+
+// create placed ornament element and wire interactions
+function makePlacedOrnament(type, cx, cy, id){
+  const g = createOrnamentSVG(type, id || ('orn'+(idCounter++)));
+  // set position
+  g.setAttribute('transform', `translate(${cx},${cy}) rotate(0) scale(1)`);
+  // make interactive
+  g.addEventListener('mousedown', startMovePlaced);
+  g.addEventListener('touchstart', startMovePlaced, {passive:false});
+  // right click to delete
+  g.addEventListener('contextmenu', (ev)=>{ ev.preventDefault(); g.remove(); });
+  // add to group
+  ornamentsGroup.appendChild(g);
+  return g;
+}
+
+// palette drag handlers (mouse & touch)
+function startDragFromPalette(ev){
+  ev.preventDefault();
+  const pitem = ev.currentTarget;
+  const type = pitem.dataset.type;
+  dragState.dragging = true;
+  dragState.sourceType = type;
+
+  // create temporary clone that follows the cursor (HTML element)
+  const clone = pitem.cloneNode(true);
+  clone.style.position = 'fixed';
+  clone.style.pointerEvents = 'none';
+  clone.style.opacity = '0.95';
+  clone.style.transform = 'translate(-50%,-50%) scale(1.2)';
+  document.body.appendChild(clone);
+  dragState.clone = clone;
+
+  // position first
+  moveCloneToEvent(ev);
+
+  window.addEventListener('mousemove', moveCloneToEvent);
+  window.addEventListener('touchmove', moveCloneToEvent, {passive:false});
+  window.addEventListener('mouseup', finishDragFromPalette);
+  window.addEventListener('touchend', finishDragFromPalette);
+}
+
+function moveCloneToEvent(ev){
+  ev.preventDefault();
+  let clientX, clientY;
+  if(ev.touches && ev.touches[0]){ clientX = ev.touches[0].clientX; clientY = ev.touches[0].clientY; }
+  else { clientX = ev.clientX; clientY = ev.clientY; }
+  if(dragState.clone){
+    dragState.clone.style.left = clientX + 'px';
+    dragState.clone.style.top = clientY + 'px';
+  }
+}
+
+function finishDragFromPalette(ev){
+  window.removeEventListener('mousemove', moveCloneToEvent);
+  window.removeEventListener('touchmove', moveCloneToEvent);
+  window.removeEventListener('mouseup', finishDragFromPalette);
+  window.removeEventListener('touchend', finishDragFromPalette);
+
+  if(!dragState.clone){ cleanupDrag(); return; }
+
+  // Check drop inside tree area using SVG coordinates
+  let clientX, clientY;
+  if(ev.changedTouches && ev.changedTouches[0]){ clientX = ev.changedTouches[0].clientX; clientY = ev.changedTouches[0].clientY; }
+  else { clientX = ev.clientX; clientY = ev.clientY; }
+  const pt = svgPoint(svg, clientX, clientY);
+
+  // find whether point is inside tree by using isPointInFill via an offscreen ctx? Simplify: use SVG getScreenCTM compare with treeHit's isPointInFill via DOM geometry:
+  // Use elementFromPoint to see if drop landed on SVG area at all and then test if inside tree path bounding box and path fill using .isPointInFill isn't widely supported, so approximate by testing if point is within treeHit's bounding box and using ray-casting against path points would be heavy.
+  // Simpler approach: check if the client point is inside the visible tree shape by using getIntersectionList (not widely supported). We'll approximate using the SVG containment: check whether the pixel under the point belongs to the tree by reading computedStyle via elementFromPoint.
+  const elemAt = document.elementFromPoint(clientX, clientY);
+  const isOnTree = elemAt && (elemAt === treeHit || elemAt.closest && elemAt.closest('#treeGroup'));
+
+  if(isOnTree){
+    // convert screen to svg coords
+    const svgCoords = svgPoint(svg, clientX, clientY);
+    makePlacedOrnament(dragState.sourceType, svgCoords.x, svgCoords.y);
+  }
+
+  cleanupDrag();
+}
+
+function cleanupDrag(){
+  if(dragState.clone && dragState.clone.parentNode) dragState.clone.remove();
+  dragState = { dragging:false, node:null, offsetX:0, offsetY:0, sourceType:null, clone:null };
+}
+
+// placed ornament move handlers
+function startMovePlaced(ev){
+  ev.preventDefault();
+  const target = ev.currentTarget;
+  dragState.dragging = true;
+  dragState.node = target;
+
+  // determine initial pointer position and node transform
+  let clientX = ev.touches ? ev.touches[0].clientX : ev.clientX;
+  let clientY = ev.touches ? ev.touches[0].clientY : ev.clientY;
+  const pt = svgPoint(svg, clientX, clientY);
+
+  // get current transform translate values
+  const t = target.getAttribute('transform') || 'translate(0,0) rotate(0) scale(1)';
+  const translateMatch = /translate\(([-\d.]+)[ ,]+([-\d.]+)\)/.exec(t);
+  const tx = translateMatch ? Number(translateMatch[1]) : 0;
+  const ty = translateMatch ? Number(translateMatch[2]) : 0;
+
+  dragState.offsetX = pt.x - tx;
+  dragState.offsetY = pt.y - ty;
+
+  window.addEventListener('mousemove', movePlaced);
+  window.addEventListener('touchmove', movePlaced, {passive:false});
+  window.addEventListener('mouseup', endMovePlaced);
+  window.addEventListener('touchend', endMovePlaced);
+}
+
+function movePlaced(ev){
+  ev.preventDefault();
+  if(!dragState.dragging || !dragState.node) return;
+  let clientX = ev.touches ? ev.touches[0].clientX : ev.clientX;
+  let clientY = ev.touches ? ev.touches[0].clientY : ev.clientY;
+  const pt = svgPoint(svg, clientX, clientY);
+  const newX = pt.x - dragState.offsetX;
+  const newY = pt.y - dragState.offsetY;
+  // update transform while preserving rotate/scale
+  const cur = dragState.node.getAttribute('transform') || '';
+  const rotateMatch = /rotate\(([-\d.]+)\)/.exec(cur);
+  const scaleMatch = /scale\(([-\d.]+)\)/.exec(cur);
+  const rot = rotateMatch ? rotateMatch[1] : 0;
+  const s = scaleMatch ? scaleMatch[1] : 1;
+  dragState.node.setAttribute('transform', `translate(${newX},${newY}) rotate(${rot}) scale(${s})`);
+}
+
+function endMovePlaced(ev){
+  window.removeEventListener('mousemove', movePlaced);
+  window.removeEventListener('touchmove', movePlaced);
+  window.removeEventListener('mouseup', endMovePlaced);
+  window.removeEventListener('touchend', endMovePlaced);
+  dragState.dragging = false;
+  dragState.node = null;
+}
+
+// palette wiring
+document.querySelectorAll('.pitem').forEach(p=>{
+  p.addEventListener('mousedown', startDragFromPalette);
+  p.addEventListener('touchstart', startDragFromPalette, {passive:false});
+});
+
+// control buttons
+document.getElementById('clearBtn').addEventListener('click', ()=>{
+  if(confirm('Clear all ornaments?')) {
+    while(ornamentsGroup.firstChild) ornamentsGroup.removeChild(ornamentsGroup.firstChild);
+    localStorage.removeItem('myTreeDesign');
+  }
+});
+
+document.getElementById('saveBtn').addEventListener('click', ()=>{
+  const arr = [];
+  for(const node of Array.from(ornamentsGroup.children)){
+    const t = node.getAttribute('transform') || '';
+    const type = node.getAttribute('data-type') || 'unknown';
+    arr.push({type, transform: t, id: node.getAttribute('data-id')});
+  }
+  localStorage.setItem('myTreeDesign', JSON.stringify(arr));
+  alert('Design saved locally (localStorage).');
+});
+
+document.getElementById('loadBtn').addEventListener('click', ()=>{
+  const json = localStorage.getItem('myTreeDesign');
+  if(!json){ alert('No saved design found.'); return; }
+  try {
+    const arr = JSON.parse(json);
+    // clear then re-create
+    while(ornamentsGroup.firstChild) ornamentsGroup.removeChild(ornamentsGroup.firstChild);
+    for(const item of arr){
+      // extract translate position numeric values from transform
+      const match = /translate\(([-\d.]+)[ ,]+([-\d.]+)\)/.exec(item.transform || '');
+      const x = match ? Number(match[1]) : 400;
+      const y = match ? Number(match[2]) : 300;
+      const placed = makePlacedOrnament(item.type, x, y, item.id);
+      // set full transform (in case rotation/scale existed)
+      placed.setAttribute('transform', item.transform);
+    }
+    alert('Design loaded.');
+  } catch(e){
+    alert('Failed to load design: ' + e);
+  }
+});
+
+// export SVG
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  // clone SVG node and inline styles so output is standalone
+  const clone = svg.cloneNode(true);
+  // remove interactive attributes & add a white background area
+  const bgRect = document.createElementNS('http://www.w3.org/2000/svg','rect');
+  bgRect.setAttribute('width','100%'); bgRect.setAttribute('height','100%'); bgRect.setAttribute('fill','#001827');
+  clone.insertBefore(bgRect, clone.firstChild);
+
+  // serialize
+  const serializer = new XMLSerializer();
+  const source = serializer.serializeToString(clone);
+  const blob = new Blob([source], {type:'image/svg+xml;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'decorated-tree.svg';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+// center ornaments button (example utility)
+document.getElementById('centerBtn').addEventListener('click', ()=>{
+  // simple center shift: moves all ornaments to average position center of tree
+  const bBox = document.getElementById('treeGroup').getBBox();
+  const centerX = bBox.x + bBox.width/2;
+  const centerY = bBox.y + bBox.height/2;
+  for(const node of Array.from(ornamentsGroup.children)){
+    const transform = node.getAttribute('transform') || '';
+    // set translate to center
+    node.setAttribute('transform', `translate(${centerX + (Math.random()-0.5)*120},${centerY + (Math.random()-0.5)*120}) rotate(0) scale(1)`);
+  }
+});
+
+// load existing design on start if any (non-blocking)
+(function autoLoad(){
+  const json = localStorage.getItem('myTreeDesign');
+  if(!json) return;
+  try {
+    const arr = JSON.parse(json);
+    for(const item of arr){
+      const match = /translate\(([-\d.]+)[ ,]+([-\d.]+)\)/.exec(item.transform || '');
+      const x = match ? Number(match[1]) : 400;
+      const y = match ? Number(match[2]) : 300;
+      const placed = makePlacedOrnament(item.type, x, y, item.id);
+      placed.setAttribute('transform', item.transform);
+    }
+  } catch(e){
+    console.warn('failed to autoload design', e);
+  }
+})();
+
+</script>
+</body>
+</html>
