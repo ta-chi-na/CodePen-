@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Animated Christmas Card 🎄</title>
+<style>
+  :root {
+    --bg: linear-gradient(180deg, #002244, #0a0f25);
+    --red: #d62828;
+    --gold: #ffd166;
+    --green: #007f5f;
+  }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    font-family: "Poppins", sans-serif;
+    overflow: hidden;
+  }
+
+  .scene {
+    perspective: 1200px;
+  }
+
+  .card {
+    position: relative;
+    width: 360px;
+    height: 500px;
+    transform-style: preserve-3d;
+    transform-origin: left;
+    transition: transform 1s ease;
+    cursor: pointer;
+  }
+
+  .card.open {
+    transform: rotateY(-160deg);
+  }
+
+  .front, .inside {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    backface-visibility: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  }
+
+  .front {
+    background: linear-gradient(145deg, var(--red), #a11d1d);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .front h1 {
+    font-size: 2.2rem;
+    margin-bottom: 0.6em;
+    color: var(--gold);
+  }
+
+  .front p {
+    font-size: 1.1rem;
+  }
+
+  .inside {
+    background: linear-gradient(160deg, #fff7e6, #ffe9c2);
+    color: #333;
+    transform: rotateY(180deg);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  .inside h2 {
+    font-size: 1.8rem;
+    color: var(--green);
+    margin-bottom: 1em;
+  }
+
+  .inside p {
+    font-size: 1.1rem;
+  }
+
+  /* Confetti */
+  .confetti {
+    position: absolute;
+    width: 6px;
+    height: 12px;
+    border-radius: 2px;
+    animation: fall 3s linear infinite;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(600px) rotate(360deg); opacity: 0; }
+  }
+
+  footer {
+    position: absolute;
+    bottom: 10px;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+  }
+</style>
+</head>
+<body>
+
+<div class="scene">
+  <div class="card" id="card">
+    <div class="front">
+      <h1>Merry Christmas 🎅</h1>
+      <p>Click to open your card!</p>
+    </div>
+    <div class="inside">
+      <h2>Wishing You Warmth & Peace</h2>
+      <p>May your holidays be filled with light, love, and laughter. ✨</p>
+    </div>
+  </div>
+</div>
+
+<footer>Made with ❤️ in GitHub Codespaces</footer>
+
+<script>
+  const card = document.getElementById("card");
+
+  card.addEventListener("click", () => {
+    card.classList.toggle("open");
+    if (card.classList.contains("open")) {
+      createConfetti();
+    }
+  });
+
+  function createConfetti() {
+    for (let i = 0; i < 40; i++) {
+      const confetti = document.createElement("div");
+      confetti.classList.add("confetti");
+      confetti.style.left = Math.random() * window.innerWidth + "px";
+      confetti.style.backgroundColor = ["#ff3b30", "#ffd60a", "#32d74b", "#0a84ff"][Math.floor(Math.random() * 4)];
+      confetti.style.animationDuration = 2 + Math.random() * 3 + "s";
+      document.body.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 4000);
+    }
+  }
+</script>
+
+</body>
+</html>
