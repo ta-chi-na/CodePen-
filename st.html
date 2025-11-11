@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🎅 Santa Flying Around the World</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #000814 40%, #000510 100%);
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: sans-serif;
+      color: white;
+    }
+
+    /* Earth background */
+    #earth {
+      position: absolute;
+      width: 1200px; /* Bigger Earth */
+      height: 1200px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/9/97/The_Earth_seen_from_Apollo_17.jpg') no-repeat center center;
+      background-size: cover;
+      border-radius: 50%;
+      box-shadow: 0 0 120px 40px #00ccff44;
+      animation: rotateEarth 60s linear infinite;
+      filter: brightness(0.9) contrast(1.1);
+    }
+
+    @keyframes rotateEarth {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Santa */
+    #santa {
+      position: absolute;
+      font-size: 4rem;
+      left: -100px;
+      top: 50%;
+      cursor: pointer;
+      text-shadow: 0 0 10px #ff0000;
+    }
+
+    /* Star trail */
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: gold;
+      border-radius: 50%;
+      opacity: 0.8;
+      pointer-events: none;
+      animation: twinkle 1s linear forwards;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0); }
+    }
+
+    /* Snowflakes */
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: white;
+      font-size: 1rem;
+      opacity: 0.8;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(100vh); }
+    }
+
+    /* Title */
+    h1 {
+      position: absolute;
+      top: 5%;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 2rem;
+      text-shadow: 0 0 20px #00ccff;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎅 Santa Flying Around the World 🌍</h1>
+  <div id="earth"></div>
+  <div id="santa">🛷🎅</div>
+
+  <script>
+    const santa = document.getElementById('santa');
+    const sky = document.body;
+    let posX = -100;
+    let posY = window.innerHeight / 2;
+    let speed = 2;
+
+    function flySanta() {
+      posX += speed;
+      santa.style.left = posX + 'px';
+      santa.style.top = posY + 'px';
+
+      // Create star trail
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.left = (posX + 50) + 'px';
+      star.style.top = (posY + 20) + 'px';
+      sky.appendChild(star);
+      setTimeout(() => star.remove(), 1000);
+
+      // Reset Santa when off screen
+      if (posX > window.innerWidth + 100) posX = -100;
+
+      requestAnimationFrame(flySanta);
+    }
+
+    // Keyboard controls
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp') posY -= 20;
+      if (e.key === 'ArrowDown') posY += 20;
+      if (e.key === 'ArrowRight') speed += 0.5;
+      if (e.key === 'ArrowLeft') speed = Math.max(1, speed - 0.5);
+    });
+
+    // Snow effect
+    function makeSnowflake() {
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+      snowflake.textContent = '❄';
+      snowflake.style.left = Math.random() * window.innerWidth + 'px';
+      snowflake.style.animationDuration = (5 + Math.random() * 5) + 's';
+      document.body.appendChild(snowflake);
+      setTimeout(() => snowflake.remove(), 10000);
+    }
+
+    setInterval(makeSnowflake, 200);
+    flySanta();
+  </script>
+</body>
+</html>
