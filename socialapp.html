@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mini Social — Neon Theme + Google Login</title>
+  <meta name="description" content="Mini Social — black, neon-green & purple. Firebase Google Login + local username/password fallback." />
+
+  <!-- THEME: black / neon green / purple -->
+  <style>
+    :root{
+      --bg: #000000;
+      --card: rgba(10,10,10,0.85);
+      --muted: #bfc9d9;
+      --accent: #9b4dff;      /* purple */
+      --neon: #39ff14;        /* neon green */
+      --glass: rgba(255,255,255,0.03);
+      --glow: 0 6px 18px rgba(155,77,255,0.14), 0 2px 8px rgba(57,255,20,0.06);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:var(--muted);
+      background: radial-gradient(circle at 10% 20%, rgba(155,77,255,0.08), transparent 6%),
+                  radial-gradient(circle at 90% 80%, rgba(57,255,20,0.04), transparent 6%),
+                  linear-gradient(180deg, #060606 0%, #020202 60%);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      min-height:100%;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 20px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+      position:sticky; top:0; z-index:50; backdrop-filter: blur(6px);
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{
+      width:44px;height:44px;border-radius:10px;
+      background: linear-gradient(135deg,var(--accent),var(--neon));
+      display:flex;align-items:center;justify-content:center;color:black;font-weight:800;
+      box-shadow: 0 6px 18px rgba(155,77,255,0.12);
+      font-family: monospace;
+    }
+    .brand .title{font-weight:800;color:var(--neon);letter-spacing:0.6px}
+    .brand .sub{font-size:12px;color:var(--muted)}
+
+    .search{flex:1;margin:0 18px}
+    .search input{
+      width:100%;padding:10px 14px;border-radius:12px;border:1px solid rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.02); color:var(--muted);
+      outline:none;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+
+    .nav-actions{display:flex;gap:10px;align-items:center}
+    .btn{
+      background: linear-gradient(90deg,var(--accent), #6c2bff);
+      color: black;padding:10px 14px;border-radius:12px;border:none;cursor:pointer;font-weight:700;
+      box-shadow: var(--glow);
+    }
+    .btn.ghost{
+      background:transparent;color:var(--neon);border:1px solid rgba(57,255,20,0.14);
+      box-shadow:none;font-weight:600;
+    }
+    .btn.small{padding:6px 10px;border-radius:10px;font-size:13px}
+
+    .layout{
+      display:grid;grid-template-columns:260px 1fr 320px;gap:18px;padding:22px;max-width:1200px;margin:22px auto;
+    }
+    aside.card, .composer, .post{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:12px;border:1px solid rgba(255,255,255,0.03);box-shadow: 0 8px 30px rgba(0,0,0,0.4)}
+
+    /* left sidebar */
+    .profile-mini{display:flex;gap:12px;align-items:center}
+    .avatar{
+      width:58px;height:58px;border-radius:10px;
+      background: linear-gradient(135deg,var(--neon),var(--accent));
+      display:flex;align-items:center;justify-content:center;color:black;font-weight:900;
+      box-shadow: 0 8px 22px rgba(57,255,20,0.08);
+    }
+    .menu{margin-top:18px;display:flex;flex-direction:column;gap:8px}
+    .menu button{background:transparent;border:none;text-align:left;padding:8px;border-radius:8px;cursor:pointer;color:var(--muted)}
+
+    /* composer */
+    .composer{display:flex;gap:12px;align-items:flex-start}
+    .composer textarea{flex:1;border-radius:12px;border:1px solid rgba(255,255,255,0.03);padding:12px;background:transparent;color:var(--muted);min-height:90px;outline:none}
+    .composer input[type=file]{color:var(--muted)}
+    .controls{display:flex;gap:8px;align-items:center}
+
+    /* feed */
+    .feed{display:flex;flex-direction:column;gap:12px}
+    .post{padding:14px}
+    .post .meta{display:flex;gap:12px;align-items:center}
+    .post .content{margin-top:8px;color:var(--muted);line-height:1.5}
+    .post img.post-image{max-width:100%;border-radius:10px;margin-top:12px;border:1px solid rgba(255,255,255,0.03)}
+    .actions{display:flex;gap:8px;margin-top:10px}
+    .like-btn.liked{color:var(--neon);font-weight:800;text-shadow:0 2px 8px rgba(57,255,20,0.08)}
+    .comment{padding:8px;border-radius:8px;background:var(--glass);margin-top:8px;color:var(--muted);border:1px solid rgba(255,255,255,0.02)}
+
+    /* right */
+    .follow-list{display:flex;flex-direction:column;gap:8px}
+    .user-row{display:flex;align-items:center;gap:10px}
+
+    footer{padding:18px;text-align:center;color:rgba(255,255,255,0.45);font-size:13px}
+
+    /* responsive */
+    @media (max-width:980px){.layout{grid-template-columns:1fr;padding:12px} aside.right{display:none} aside.left{display:none}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">MS</div>
+      <div>
+        <div class="title">Mini Social</div>
+        <div class="sub">Black • Neon • Purple</div>
+      </div>
+    </div>
+
+    <div class="search"><input id="searchInput" placeholder="Search users or posts..." /></div>
+
+    <div class="nav-actions">
+      <button id="themeToggle" class="btn ghost small">Toggle Theme</button>
+      <button id="authBtn" class="btn small">Login / Sign Up</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="left card">
+      <div id="leftSignedOut" >
+        <div style="text-align:center;padding:14px;color:var(--muted)">Welcome — try creating an account or sign in with Google</div>
+      </div>
+      <div id="leftProfile" style="display:none">
+        <div class="profile-mini">
+          <div id="leftAvatar" class="avatar">A</div>
+          <div>
+            <div id="leftName" style="font-weight:700;color:var(--neon)"></div>
+            <div id="leftHandle" style="font-size:12px;color:var(--muted)">@handle</div>
+          </div>
+        </div>
+        <div class="menu">
+          <button id="goProfile">Profile</button>
+          <button id="goExplore">Explore</button>
+          <button id="logoutBtn">Logout</button>
+        </div>
+      </div>
+    </aside>
+
+    <section>
+      <div class="composer card">
+        <div class="avatar">U</div>
+        <div style="flex:1">
+          <textarea id="postText" placeholder="What’s happening?"></textarea>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px">
+            <div>
+              <input id="imageInput" type="file" accept="image/*" />
+            </div>
+            <div class="controls">
+              <div style="display:flex;gap:8px">
+                <button id="postBtn" class="btn small">Post</button>
+                <button id="clearBtn" class="btn ghost small">Clear</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;display:flex;gap:12px;align-items:center">
+        <select id="sortSelect" style="background:transparent;color:var(--muted);border-radius:8px;padding:8px;border:1px solid rgba(255,255,255,0.03)">
+          <option value="recent">Most recent</option>
+          <option value="popular">Most liked</option>
+        </select>
+        <div style="font-size:12px;color:var(--muted)">Showing <span id="postCount">0</span> posts</div>
+      </div>
+
+      <div id="feed" class="feed" style="margin-top:12px"></div>
+    </section>
+
+    <aside class="right card">
+      <div style="font-weight:700;color:var(--neon)">Who to follow</div>
+      <div id="suggested" class="follow-list" style="margin-top:10px"></div>
+
+      <div style="margin-top:18px">
+        <div style="font-weight:700;color:var(--neon)">Your Profile Preview</div>
+        <div id="profilePreview" style="margin-top:8px"></div>
+      </div>
+    </aside>
+  </main>
+
+  <footer>Built with ❤️ — local posts & Firebase Google auth (no server required)</footer>
+
+  <!-- Modals root -->
+  <div id="modalRoot"></div>
+
+  <!-- Firebase (compat libraries for simple script usage) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+  <script>
+    /* ============================
+       Mini Social (neon theme) + Firebase Google Login
+       - Keep username/password fallback (localStorage)
+       - Google sign-in creates/uses local user (id prefixed with 'fb_')
+       - Replace firebaseConfig with your Firebase project's config
+       ============================ */
+
+    // ---- Utilities ----
+    const uid = () => '_' + Math.random().toString(36).slice(2, 9);
+    const qs = s => document.querySelector(s);
+    const STORAGE_KEYS = { USERS: 'mini_users_v1', POSTS: 'mini_posts_v1', SESSION: 'mini_session_v1' };
+    const storage = {
+      load(k, fallback){ try{ const raw = localStorage.getItem(k); return raw ? JSON.parse(raw) : fallback }catch(e){return fallback} },
+      save(k,v){ localStorage.setItem(k, JSON.stringify(v)) }
+    };
+
+    // ---- Firebase config (REPLACE) ----
+    // Create a Firebase project and enable Google sign-in, then paste your config here.
+    const firebaseConfig = {
+      apiKey: "REPLACE_API_KEY",
+      authDomain: "REPLACE_AUTH_DOMAIN",
+      projectId: "REPLACE_PROJECT_ID",
+      appId: "REPLACE_APP_ID",
+      // other keys possible (messagingSenderId, storageBucket) — add if provided
+    };
+    // Don't forget: add your preview domain (Codespaces / localhost) to Firebase Authentication's authorized domains.
+
+    // Only initialize if user replaced config
+    let firebaseAvailable = false;
+    try {
+      if (firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith("REPLACE")) {
+        firebase.initializeApp(firebaseConfig);
+        firebaseAvailable = true;
+      }
+    } catch (err) {
+      console.warn("Firebase init failed — did you replace firebaseConfig? ", err);
+    }
+
+    // ---- App state + default data ----
+    const ensureData = () => {
+      let users = storage.load(STORAGE_KEYS.USERS, null);
+      let posts = storage.load(STORAGE_KEYS.POSTS, null);
+      if(!users){
+        users = [
+          {id: 'u_alex', name:'Alex Rivera', handle:'alex', bio:'Front-end tinkerer', avatarInitials:'AR', following:[], followers:[]},
+          {id: 'u_maya', name:'Maya Chen', handle:'maya', bio:'Photographer', avatarInitials:'MC', following:[], followers:[]},
+          {id: 'u_jam', name:'Jam', handle:'jam', bio:'Coffee & code', avatarInitials:'J', following:[], followers:[]}
+        ];
+        storage.save(STORAGE_KEYS.USERS, users);
+      }
+      if(!posts){
+        posts = [
+          {id:uid(), userId:'u_alex', text:'Welcome to Mini Social — neon mode!', created:Date.now()-1000*60*60*24, likedBy:['u_maya','u_jam'], comments:[{id:uid(), userId:'u_maya', text:'Nice!', created:Date.now()-1000*60*60}], image:null},
+        ];
+        storage.save(STORAGE_KEYS.POSTS, posts);
+      }
+    };
+    ensureData();
+
+    // ---- load state ----
+    let users = storage.load(STORAGE_KEYS.USERS, []);
+    let posts = storage.load(STORAGE_KEYS.POSTS, []);
+    let session = storage.load(STORAGE_KEYS.SESSION, null); // {userId}
+
+    // ---- DOM refs ----
+    const feedEl = qs('#feed');
+    const postTextEl = qs('#postText');
+    const postBtn = qs('#postBtn');
+    const clearBtn = qs('#clearBtn');
+    const imageInput = qs('#imageInput');
+    const postCountEl = qs('#postCount');
+    const authBtn = qs('#authBtn');
+    const leftSignedOut = qs('#leftSignedOut');
+    const leftProfile = qs('#leftProfile');
+    const leftAvatar = qs('#leftAvatar');
+    const leftName = qs('#leftName');
+    const leftHandle = qs('#leftHandle');
+    const logoutBtn = qs('#logoutBtn');
+    const suggestedEl = qs('#suggested');
+    const profilePreview = qs('#profilePreview');
+    const sortSelect = qs('#sortSelect');
+    const searchInput = qs('#searchInput');
+    const themeToggle = qs('#themeToggle');
+
+    // ---- Theme toggle (keeps behavior) ----
+    const applyTheme = () => {
+      const t = localStorage.getItem('mini_theme') || 'neon';
+      if(t==='neon') {
+        document.documentElement.style.setProperty('--bg','#000');
+      } else {
+        document.documentElement.style.setProperty('--bg','#f4f6f8');
+      }
+    };
+    themeToggle.addEventListener('click', ()=>{ const cur = localStorage.getItem('mini_theme')||'neon'; localStorage.setItem('mini_theme', cur==='neon'?'light':'neon'); applyTheme(); });
+    applyTheme();
+
+    // ---- Firebase auth helpers (Google) ----
+    let firebaseAuth = null;
+    if (firebaseAvailable) {
+      firebaseAuth = firebase.auth();
+      // Listen to changes and map Firebase user -> local session
+      firebaseAuth.onAuthStateChanged(async (fbUser) => {
+        if (fbUser) {
+          // create/find a matching local user: id prefixed with 'fb_'
+          const localId = 'fb_' + fbUser.uid;
+          users = storage.load(STORAGE_KEYS.USERS, users) || [];
+          let local = users.find(u => u.id === localId || u.email === fbUser.email);
+          if (!local) {
+            // create a new local profile from Firebase user data
+            const name = fbUser.displayName || (fbUser.email||"").split('@')[0];
+            const handle = (fbUser.email || name).split('@')[0].replace(/\W+/g,'').toLowerCase().slice(0,18);
+            local = {
+              id: localId,
+              name,
+              handle,
+              bio: fbUser.providerData?.[0]?.providerId || 'Google user',
+              avatarInitials: (name.match(/\b\w/g)||[]).slice(0,2).join('').toUpperCase(),
+              following: [],
+              followers: [],
+              email: fbUser.email
+            };
+            users.unshift(local);
+            storage.save(STORAGE_KEYS.USERS, users);
+          }
+          // set session to local user
+          session = { userId: local.id };
+          storage.save(STORAGE_KEYS.SESSION, session);
+          render();
+        } else {
+          // logged out
+          // Do NOT clear localStorage posts; only clear session
+          session = null;
+          storage.save(STORAGE_KEYS.SESSION, null);
+          render();
+        }
+      });
+    }
+
+    // ---- Auth UI & logic ----
+    authBtn.addEventListener('click', () => showAuthModal());
+    logoutBtn.addEventListener('click', async ()=>{
+      if (firebaseAvailable && firebaseAuth && firebaseAuth.currentUser) {
+        try { await firebaseAuth.signOut(); } catch(e){ console.warn(e); }
+      }
+      session = null; storage.save(STORAGE_KEYS.SESSION,null); render();
+    });
+
+    function showAuthModal(){
+      const modal = document.createElement('div');
+      modal.style.position='fixed';modal.style.left=0;modal.style.top=0;modal.style.right=0;modal.style.bottom=0;
+      modal.style.display='flex';modal.style.alignItems='center';modal.style.justifyContent='center';
+      modal.style.background='rgba(0,0,0,0.6)';modal.style.zIndex=9999;
+
+      modal.innerHTML = `
+        <div style="width:420px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)">
+          <h3 style="margin:0 0 10px 0;color:var(--neon)">Login / Sign up</h3>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:12px">You can sign in with Google (recommended) — or create a local account below.</div>
+
+          <div id="googleArea" style="margin-bottom:12px;display:flex;gap:8px">
+            <button id="googleSignBtn" class="btn" style="flex:1;background:linear-gradient(90deg,var(--neon),var(--accent));color:black">Sign in with Google</button>
+          </div>
+
+          <div style="margin:10px 0 12px 0;border-top:1px dashed rgba(255,255,255,0.03);padding-top:12px">
+            <input id="amName" placeholder="Display name" style="width:100%;padding:10px;margin-bottom:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--muted)"/>
+            <input id="amHandle" placeholder="Handle (no spaces)" style="width:100%;padding:10px;margin-bottom:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--muted)"/>
+            <input id="amPass" placeholder="Password" type="password" style="width:100%;padding:10px;margin-bottom:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:var(--muted)"/>
+          </div>
+
+          <div style="display:flex;gap:8px;justify-content:flex-end">
+            <button id="amCancel" class="btn ghost small">Cancel</button>
+            <button id="amCreate" class="btn small">Create / Login</button>
+          </div>
+        </div>
+      `;
+      // event handlers
+      modal.querySelector('#amCancel').addEventListener('click', ()=>{ modal.remove() });
+      modal.querySelector('#amCreate').addEventListener('click', ()=>{
+        const name = modal.querySelector('#amName').value.trim();
+        const handle = modal.querySelector('#amHandle').value.trim().toLowerCase();
+        const pass = modal.querySelector('#amPass').value;
+        if(!handle || !pass) return alert('Please provide handle and password');
+        users = storage.load(STORAGE_KEYS.USERS, users) || [];
+        // Find existing user with handle+password
+        let existing = users.find(u=>u.handle===handle && u.password===pass);
+        if(existing){
+          session = {userId:existing.id}; storage.save(STORAGE_KEYS.SESSION, session); modal.remove(); render(); return;
+        }
+        // Create new local user
+        if(users.find(u=>u.handle===handle)) return alert('Handle taken');
+        const newUser = {id: 'u_'+uid(), name: name||handle, handle, bio:'', avatarInitials: initials(name||handle), following:[], followers:[], password:pass};
+        users.unshift(newUser); storage.save(STORAGE_KEYS.USERS, users);
+        session = {userId:newUser.id}; storage.save(STORAGE_KEYS.SESSION, session);
+        modal.remove(); render();
+      });
+
+      // Google sign-in button
+      modal.querySelector('#googleSignBtn').addEventListener('click', async () => {
+        if (!firebaseAvailable) return alert('Firebase not configured. Replace firebaseConfig at top of file.');
+        const provider = new firebase.auth.GoogleAuthProvider();
+        try {
+          await firebaseAuth.signInWithPopup(provider);
+          // onAuthStateChanged will handle session creation
+          modal.remove();
+        } catch (err) {
+          console.error('Google sign-in error', err);
+          alert('Google sign-in failed: ' + (err.message || err));
+        }
+      });
+
+      document.body.appendChild(modal);
+    }
+
+    function initials(name){ return (name || '').split(' ').map(s=>s[0]||'').join('').slice(0,2).toUpperCase(); }
+
+    // ---- Post creation ----
+    let pendingImage = null;
+    imageInput.addEventListener('change', (e)=>{
+      const f = e.target.files[0];
+      if(!f) return; const reader = new FileReader();
+      reader.onload = () => { pendingImage = reader.result; }
+      reader.readAsDataURL(f);
+    });
+
+    postBtn.addEventListener('click', ()=>{
+      if(!session){ showAuthModal(); return }
+      const text = postTextEl.value.trim();
+      if(!text && !pendingImage) return alert('Write something or attach an image');
+      const newPost = {id:uid(), userId:session.userId, text, image: pendingImage, created: Date.now(), likedBy:[], comments:[]};
+      posts.unshift(newPost); storage.save(STORAGE_KEYS.POSTS, posts);
+      postTextEl.value=''; imageInput.value=''; pendingImage=null; render();
+    });
+    clearBtn.addEventListener('click', ()=>{ postTextEl.value=''; imageInput.value=''; pendingImage=null });
+
+    // ---- Render & helpers ----
+    function getUserById(id){ return (storage.load(STORAGE_KEYS.USERS, users) || []).find(u=>u.id===id) }
+
+    function render(){
+      users = storage.load(STORAGE_KEYS.USERS, users) || [];
+      posts = storage.load(STORAGE_KEYS.POSTS, posts) || [];
+      session = storage.load(STORAGE_KEYS.SESSION, session);
+
+      // left profile
+      if(session){
+        leftSignedOut.style.display='none'; leftProfile.style.display='block';
+        const me = getUserById(session.userId);
+        if(me){
+          leftAvatar.textContent = me.avatarInitials||initials(me.name);
+          leftName.textContent = me.name;
+          leftHandle.textContent = '@'+me.handle;
+        } else {
+          leftAvatar.textContent = 'U';
+          leftName.textContent = 'Unknown';
+        }
+      } else { leftSignedOut.style.display='block'; leftProfile.style.display='none' }
+
+      // feed filtering & sort
+      const q = (searchInput.value||'').trim().toLowerCase();
+      let shown = (posts||[]).slice();
+      if(q){ shown = shown.filter(p=> (p.text||'').toLowerCase().includes(q) || ((getUserById(p.userId)||{}).name||'').toLowerCase().includes(q) || ((getUserById(p.userId)||{}).handle||'').toLowerCase().includes(q)) }
+      if(sortSelect.value==='popular'){ shown = shown.sort((a,b)=> (b.likedBy?.length||0) - (a.likedBy?.length||0)) } else { shown = shown.sort((a,b)=> b.created - a.created) }
+
+      feedEl.innerHTML = '';
+      postCountEl.textContent = shown.length;
+      shown.forEach(p=> feedEl.appendChild(renderPost(p)));
+
+      // suggestions
+      suggestedEl.innerHTML = '';
+      users.slice(0,6).forEach(u=>{
+        const row = document.createElement('div'); row.className='user-row';
+        row.innerHTML = `<div class='avatar' style='width:36px;height:36px;border-radius:8px'>${u.avatarInitials||initials(u.name)}</div><div style='flex:1'><div style='font-weight:700;color:var(--neon)'>${u.name}</div><div style='font-size:12px;color:var(--muted)'>@${u.handle}</div></div>`;
+        const btn = document.createElement('button'); btn.className='btn ghost small'; btn.textContent = (session && getUserById(session.userId).following && getUserById(session.userId).following.includes(u.id))? 'Following':'Follow';
+        btn.addEventListener('click', ()=>{ toggleFollow(u.id); });
+        row.appendChild(btn); suggestedEl.appendChild(row);
+      });
+
+      // profile preview
+      profilePreview.innerHTML = '';
+      if(session){
+        const me = getUserById(session.userId);
+        if(me){
+          profilePreview.innerHTML = `<div style='display:flex;gap:8px;align-items:center'><div class='avatar'>${me.avatarInitials||initials(me.name)}</div><div><div style='font-weight:700;color:var(--neon)'>${me.name}</div><div style='font-size:12px;color:var(--muted)'>@${me.handle}</div></div></div><div style='margin-top:8px;font-size:13px;color:var(--muted)'>${me.bio||''}</div>`;
+        }
+      } else {
+        profilePreview.innerHTML = '<div style="font-size:13px;color:var(--muted)">Login to see your profile preview</div>';
+      }
+    }
+
+    function renderPost(p){
+      const el = document.createElement('div'); el.className='post';
+      const user = getUserById(p.userId) || {name:'Unknown', handle:'unknown', avatarInitials:'?'};
+      const liked = session && p.likedBy && p.likedBy.includes(session.userId);
+      el.innerHTML = `
+        <div class='meta'>
+          <div class='avatar' style='width:44px;height:44px;border-radius:8px'>${user.avatarInitials||initials(user.name)}</div>
+          <div style='flex:1'>
+            <div style='display:flex;align-items:center;gap:8px'><div style='font-weight:700;color:var(--neon)'>${user.name}</div><div style='font-size:12px;color:var(--muted)'>@${user.handle} · ${timeAgo(p.created)}</div></div>
+            <div class='content'>${escapeHtml(p.text||'')}</div>
+          </div>
+        </div>
+      `;
+      if(p.image) { const img = document.createElement('img'); img.className='post-image'; img.src = p.image; el.appendChild(img); }
+      const actions = document.createElement('div'); actions.className='actions';
+
+      const likeBtn = document.createElement('button'); likeBtn.className='btn ghost like-btn small'; likeBtn.innerHTML = `❤ ${p.likedBy?.length||0}`; if(liked) likeBtn.classList.add('liked'); likeBtn.addEventListener('click', ()=>{ toggleLike(p.id) });
+      const commentBtn = document.createElement('button'); commentBtn.className='btn ghost small'; commentBtn.textContent='Comment'; commentBtn.addEventListener('click', ()=>{ showCommentBox(p.id) });
+      const profileBtn = document.createElement('button'); profileBtn.className='btn ghost small'; profileBtn.textContent='Profile'; profileBtn.addEventListener('click', ()=>{ showProfileModal(user.id) });
+      actions.appendChild(likeBtn); actions.appendChild(commentBtn); actions.appendChild(profileBtn);
+      el.appendChild(actions);
+
+      // comments
+      const commentsWrap = document.createElement('div'); commentsWrap.className='comments';
+      (p.comments||[]).forEach(c=>{
+        const cu = getUserById(c.userId) || {name:'Unknown', handle:'unknown', avatarInitials:'?'};
+        const cm = document.createElement('div'); cm.className='comment'; cm.innerHTML = `<div style='font-weight:700;color:var(--neon)'>${cu.name} <span style='font-weight:400;color:var(--muted);font-size:12px'>@${cu.handle} · ${timeAgo(c.created)}</span></div><div style='margin-top:6px'>${escapeHtml(c.text)}</div>`;
+        commentsWrap.appendChild(cm);
+      });
+      el.appendChild(commentsWrap);
+
+      return el;
+    }
+
+    // ---- actions ----
+    function toggleLike(postId){ if(!session){ showAuthModal(); return } const p = posts.find(x=>x.id===postId); if(!p) return; const me = session.userId; p.likedBy = p.likedBy||[]; if(p.likedBy.includes(me)){ p.likedBy = p.likedBy.filter(id=>id!==me) } else { p.likedBy.push(me) } storage.save(STORAGE_KEYS.POSTS, posts); render(); }
+
+    function showCommentBox(postId){ if(!session){ showAuthModal(); return } const text = prompt('Write a comment'); if(!text) return; const p = posts.find(x=>x.id===postId); p.comments = p.comments||[]; p.comments.push({id:uid(), userId:session.userId, text, created:Date.now()}); storage.save(STORAGE_KEYS.POSTS, posts); render(); }
+
+    function toggleFollow(userId){ if(!session){ showAuthModal(); return } users = storage.load(STORAGE_KEYS.USERS, users); const me = users.find(u=>u.id===session.userId); if(!me || me.id===userId) return; if(me.following.includes(userId)){ me.following = me.following.filter(x=>x!==userId); } else { me.following.push(userId) }
+      // update followers on target
+      const target = users.find(u=>u.id===userId); if(!target) return;
+      if(target.followers.includes(me.id)){ target.followers = target.followers.filter(x=>x!==me.id) } else { target.followers.push(me.id) }
+      storage.save(STORAGE_KEYS.USERS, users); render(); }
+
+    function showProfileModal(userId){ const u = getUserById(userId); if(!u) return; const modal = document.createElement('div'); modal.style.position='fixed';modal.style.left=0;modal.style.top=0;modal.style.right=0;modal.style.bottom=0;modal.style.display='flex';modal.style.alignItems='center';modal.style.justifyContent='center';modal.style.background='rgba(0,0,0,0.6)';modal.style.zIndex=9999; modal.innerHTML=`<div style='width:420px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:16px;border-radius:12px'><div style='display:flex;gap:12px;align-items:center'><div class='avatar' style='width:72px;height:72px;border-radius:12px'>${u.avatarInitials||initials(u.name)}</div><div><div style='font-weight:700;color:var(--neon)'>${u.name}</div><div style='font-size:12px;color:var(--muted)'>@${u.handle}</div><div style='margin-top:8px'>${u.bio||''}</div></div></div><div style='margin-top:12px;display:flex;justify-content:flex-end;gap:8px'><button id='pmClose' class='btn ghost small'>Close</button><button id='pmFollow' class='btn small'>Follow</button></div></div>`; modal.querySelector('#pmClose').addEventListener('click', ()=>modal.remove()); modal.querySelector('#pmFollow').addEventListener('click', ()=>{ toggleFollow(u.id); modal.remove(); }); document.body.appendChild(modal); }
+
+    function timeAgo(ts){ const s = Math.floor((Date.now()-ts)/1000); if(s<60) return s+'s'; if(s<3600) return Math.floor(s/60)+'m'; if(s<86400) return Math.floor(s/3600)+'h'; return Math.floor(s/86400)+'d'; }
+    function escapeHtml(s){ if(!s) return ''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+
+    // ---- small helpers ----
+    searchInput.addEventListener('input', ()=>{ render() }); sortSelect.addEventListener('change', ()=>{ render() });
+    qs('#goExplore').addEventListener('click', ()=>{ searchInput.value=''; sortSelect.value='popular'; render() });
+    qs('#goProfile').addEventListener('click', ()=>{ if(!session){ showAuthModal(); return } showProfileModal(session.userId); });
+
+    // initial render
+    render();
+
+    // debug
+    window.MiniSocial = { users, posts, storageKeys: STORAGE_KEYS };
+  </script>
+</body>
+</html>
