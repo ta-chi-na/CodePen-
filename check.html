@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>People Mood Check-In</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 40px;
+      background:
+        radial-gradient(1px 1px at 20% 30%, white, transparent),
+        radial-gradient(1px 1px at 80% 40%, white, transparent),
+        radial-gradient(1px 1px at 50% 80%, white, transparent),
+        radial-gradient(2px 2px at 70% 20%, white, transparent),
+        radial-gradient(1px 1px at 10% 70%, white, transparent),
+        radial-gradient(2px 2px at 90% 90%, white, transparent),
+        linear-gradient(to bottom, #020111 0%, #0b1d3a 100%);
+      background-repeat: repeat;
+      background-size: 
+        300px 300px, 
+        400px 400px, 
+        500px 500px,
+        600px 600px, 
+        700px 700px, 
+        800px 800px, 
+        cover;
+    }
+
+    .app {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #555;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    input, select, textarea {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    button {
+      background: #4a90e2;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #357bd8;
+    }
+
+    .people-list {
+      margin-top: 25px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .person-card {
+      background: #f7f9fc;
+      padding: 15px;
+      border-radius: 12px;
+      border-left: 5px solid #4a90e2;
+    }
+
+    .person-card h3 {
+      margin: 0 0 5px;
+    }
+
+    .person-card .mood {
+      font-size: 18px;
+    }
+
+    .person-card p {
+      margin: 5px 0 0;
+      color: #555;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <h1>People Mood Check-In</h1>
+    <p class="subtitle">How are you feeling today?</p>
+
+    <form id="checkInForm">
+      <input type="text" id="name" placeholder="Your name" required />
+
+      <select id="mood" required>
+        <option value="">Select your mood</option>
+        <option value="😊 Happy">😊 Happy</option>
+        <option value="😐 Okay">😐 Okay</option>
+        <option value="😔 Sad">😔 Sad</option>
+        <option value="😤 Stressed">😤 Stressed</option>
+        <option value="😴 Tired">😴 Tired</option>
+      </select>
+
+      <textarea id="note" placeholder="Optional note..."></textarea>
+
+      <button type="submit">Check In</button>
+    </form>
+
+    <div id="peopleList" class="people-list"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("checkInForm");
+    const peopleList = document.getElementById("peopleList");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const mood = document.getElementById("mood").value;
+      const note = document.getElementById("note").value;
+
+      const card = document.createElement("div");
+      card.classList.add("person-card");
+
+      card.innerHTML = `
+        <h3>${name}</h3>
+        <div class="mood">${mood}</div>
+        ${note ? `<p>${note}</p>` : ""}
+      `;
+
+      peopleList.prepend(card);
+      form.reset();
+    });
+  </script>
+</body>
+</html>
